@@ -1,38 +1,38 @@
 const state = {
-  isChecked: false,
+  isKzt: false,
   isFee: true,
 };
 
-const calculateRateKzt = (bhtInput, usdThbRate, usdKztRate, kztRubRate) => {
-  let bhtWithCommision;
+const calculateRateKzt = (curInput, usdCurRate, usdKztRate, kztRubRate) => {
+  let curWithCommision;
   if (state.isFee) {
-    bhtWithCommision =
-      bhtInput <= 30000
-        ? bhtInput + 220
-        : bhtInput + Math.ceil(bhtInput / 30000) * 220;
+    curWithCommision =
+      curInput <= 30000
+        ? curInput + 220
+        : curInput + Math.ceil(curInput / 30000) * 220;
   } else {
-    bhtWithCommision = bhtInput;
+    curWithCommision = curInput;
   }
-  const bhtInUsd = bhtWithCommision / usdThbRate;
-  const usdInKzt = usdKztRate * bhtInUsd;
+  const curInUsd = curWithCommision / usdCurRate;
+  const usdInKzt = usdKztRate * curInUsd;
   const kztInRub = usdInKzt / kztRubRate;
-  const result = kztInRub / bhtInput;
+  const result = kztInRub / curInput;
   return result.toFixed(2);
 };
 
-const calculateRateRub = (bhtInput, usdThbRate, usdRubRate) => {
-  let bhtWithCommision;
+const calculateRateRub = (curInput, usdCurRate, usdRubRate) => {
+  let curWithCommision;
   if (state.isFee) {
-    bhtWithCommision =
-      bhtInput <= 30000
-        ? bhtInput + 220
-        : bhtInput + Math.ceil(bhtInput / 30000) * 220;
+    curWithCommision =
+      curInput <= 30000
+        ? curInput + 220
+        : curInput + Math.ceil(curInput / 30000) * 220;
   } else {
-    bhtWithCommision = bhtInput;
+    curWithCommision = curInput;
   }
-  const bhtInUsd = bhtWithCommision / usdThbRate;
-  const usdInRub = usdRubRate * bhtInUsd;
-  const result = usdInRub / bhtInput;
+  const curInUsd = curWithCommision / usdCurRate;
+  const usdInRub = usdRubRate * curInUsd;
+  const result = usdInRub / curInput;
   return result.toFixed(2);
 };
 
@@ -41,16 +41,16 @@ form.addEventListener('submit', (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
-  const bhtInput = Number(formData.get('bhtInput'));
-  const usdThbRate = Number(formData.get('usdThbRate'));
+  const curInput = Number(formData.get('curInput'));
+  const usdCurRate = Number(formData.get('usdCurRate'));
   const usdRubRate = Number(formData.get('usdRubRate'));
   const usdKztRate = Number(formData.get('usdKztRate'));
   const kztRubRate = Number(formData.get('kztRubRate'));
   const result = state.isChecked
-    ? calculateRateKzt(bhtInput, usdThbRate, usdKztRate, kztRubRate)
-    : calculateRateRub(bhtInput, usdThbRate, usdRubRate);
+    ? calculateRateKzt(curInput, usdCurRate, usdKztRate, kztRubRate)
+    : calculateRateRub(curInput, usdCurRate, usdRubRate);
   const h2 = document.querySelector('#result');
-  h2.textContent = `Курс бата к рублю: ${result}`;
+  h2.textContent = `Курс к рублю: ${result}`;
 });
 
 const feeCheckbox = document.getElementById('feeCheckbox');
@@ -68,19 +68,19 @@ checkbox.addEventListener('change', (e) => {
     state.isChecked = true;
     form.innerHTML = `
       <div class="form-group">
-            <label for="bhtInput">Требуемая сумма (в THB):</label>
+            <label for="bhtInput">Требуемая сумма (в третьей валюте):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="bhtInput" name="bhtInput" required>
       </div>
       <div class="form-group">
-            <label for="usdThbRate">Курс USD > THB (<a target="_blank" href="https://www.visa.co.th/en_TH/support/consumer/travel-support/exchange-rate-calculator.html">Visa</a>):</label>
+            <label for="usdThbRate">Курс USD к третьей валюте (<a target="_blank" href="https://www.visa.co.th/en_TH/support/consumer/travel-support/exchange-rate-calculator.html">Visa</a>):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="usdThbRate" name="usdThbRate" required>
       </div>
       <div class="form-group">
-            <label for="usdKztRate">Курс USD > KZT (<a target="_blank" href="https://t.me/KZrobot">БЦК</a>):</label>
+            <label for="usdKztRate">Курс USD к KZT (<a target="_blank" href="https://t.me/KZrobot">БЦК</a>):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="usdKztRate" name="usdKztRate" required>
       </div>
       <div class="form-group">
-            <label for="kztRubRate">Курс RUB > KZT (<a target="_blank" href="https://www.finsend.io">finsend</a>):</label>
+            <label for="kztRubRate">Курс RUB к KZT (<a target="_blank" href="https://www.finsend.io">finsend</a>):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="kztRubRate" name="kztRubRate" required>
       </div>
       <button type="submit" class="btn btn-primary mt-4 mb-4">Рассчитать</button>
@@ -90,15 +90,15 @@ checkbox.addEventListener('change', (e) => {
     state.isChecked = false;
     form.innerHTML = `
       <div class="form-group">
-            <label for="bhtInput">Требуемая сумма (в THB):</label>
+            <label for="bhtInput">Требуемая сумма (в третьей валюте):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="bhtInput" name="bhtInput" required>
       </div>
       <div class="form-group">
-            <label for="usdThbRate">Курс USD > THB (<a href="https://usa.visa.com/support/consumer/travel-support/exchange-rate-calculator.html">Visa</a>):</label>
+            <label for="usdThbRate">Курс USD к третьей валюте (<a href="https://usa.visa.com/support/consumer/travel-support/exchange-rate-calculator.html">Visa</a>):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="usdThbRate" name="usdThbRate" required>
       </div>
       <div class="form-group">
-            <label for="usdRubRate">Курс USD > RUB (<a target="_blank" href="https://t.me/KZrobot">БЦК</a>):</label>
+            <label for="usdRubRate">Курс USD к RUB (<a target="_blank" href="https://t.me/KZrobot">БЦК</a>):</label>
             <input type="number" step="0.01" placeholder="0.00" class="form-control" id="usdRubRate" name="usdRubRate" required>
       </div>
       <button type="submit" class="btn btn-primary mt-4 mb-4">Рассчитать</button>
