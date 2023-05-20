@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Конвертер курса бата</h1>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="kztCheckbox">
+            <label class="form-check-label mb-3" for="kztCheckbox">
+            Через KZT
+            </label>
+        </div>
+        <form id="conversionForm">
+            <div class="form-group">
+                <label for="bhtInput">Требуемая сумма (в батах):</label>
+                <input type="number" step="0.01" class="form-control" id="bhtInput" name="bhtInput" required>
+            </div>
+            <div class="form-group">
+                <label for="usdThbRate">Курс THB > USD (<a target="_blank" href="https://www.visa.co.th/en_TH/support/consumer/travel-support/exchange-rate-calculator.html">Visa</a>):</label>
+                <input type="number" step="0.01" class="form-control" id="usdThbRate" name="usdThbRate" required>
+            </div>
+            <div class="form-group">
+                <label for="usdRubRate">Курс RUB > USD (<a target="_blank" href="https://t.me/KZrobot">БЦК</a>):</label>
+                <input type="number" step="0.01" class="form-control" id="usdRubRate" name="usdRubRate" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4 mb-4">Рассчитать</button>
+            <h2 id="result"></h2>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="index.js"></script>
+</body>
+</html>
