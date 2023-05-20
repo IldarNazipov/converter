@@ -1,52 +1,74 @@
-// Функция для расчета курса через KZT
-const calculateRateKzt = (bhtInput, usdThbRate, usdKztRate, kztRubRate) => {
-    const bhtWithCommision = bhtInput <= 30000 ? bhtInput + 220 : bhtInput + Math.ceil(bhtInput / 30000) * 220;
-    const bhtInUsd = bhtWithCommision / usdThbRate;
-    const usdInKzt = usdKztRate * bhtInUsd;
-    const kztInRub = usdInKzt / kztRubRate;
-    const result = kztInRub / bhtInput;
-    return result.toFixed(2);
-  };
-  
-  // Функция для расчета курса через RUB
-  const calculateRateRub = (bhtInput, usdThbRate, usdRubRate) => {
-    const bhtWithCommision = bhtInput <= 30000 ? bhtInput + 220 : bhtInput + Math.ceil(bhtInput / 30000) * 220;
-    const bhtInUsd = bhtWithCommision / usdThbRate;
-    const usdInRub = usdRubRate * bhtInUsd;
-    const result = usdInRub / bhtInput;
-    return result.toFixed(2);
-  };
-  
-  const state = {
-    isChecked: false,
-  };
+const state = {
+  isChecked: false,
+  isFee: true,
+};
 
-  // Обработчик отправки формы
-  const form = document.getElementById('conversionForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const bhtInput = Number(formData.get('bhtInput'));
-    const usdThbRate = Number(formData.get('usdThbRate'));
-    const usdRubRate = Number(formData.get('usdRubRate'));
-    const usdKztRate = Number(formData.get('usdKztRate'));
-    const kztRubRate = Number(formData.get('kztRubRate'));
-    const result = state.isChecked
-        ? calculateRateKzt(bhtInput, usdThbRate, usdKztRate, kztRubRate)
-        : calculateRateRub(bhtInput, usdThbRate, usdRubRate);
-    const h2 = document.querySelector('#result');
-    h2.textContent = `Курс бата к рублю: ${result}`;
-  });
-  
-  // Обработчик изменения состояния переключателя
-  const checkbox = document.getElementById('kztCheckbox');
-  checkbox.addEventListener('change', (e) => {  
-    if (e.target.checked) {
-        state.isChecked = true;
-        form.innerHTML = `
+const calculateRateKzt = (bhtInput, usdThbRate, usdKztRate, kztRubRate) => {
+  let bhtWithCommision;
+  if (state.isFee) {
+    bhtWithCommision =
+      bhtInput <= 30000
+        ? bhtInput + 220
+        : bhtInput + Math.ceil(bhtInput / 30000) * 220;
+  } else {
+    bhtWithCommision = bhtInput;
+  }
+  const bhtInUsd = bhtWithCommision / usdThbRate;
+  const usdInKzt = usdKztRate * bhtInUsd;
+  const kztInRub = usdInKzt / kztRubRate;
+  const result = kztInRub / bhtInput;
+  return result.toFixed(2);
+};
+
+const calculateRateRub = (bhtInput, usdThbRate, usdRubRate) => {
+  let bhtWithCommision;
+  if (state.isFee) {
+    bhtWithCommision =
+      bhtInput <= 30000
+        ? bhtInput + 220
+        : bhtInput + Math.ceil(bhtInput / 30000) * 220;
+  } else {
+    bhtWithCommision = bhtInput;
+  }
+  const bhtInUsd = bhtWithCommision / usdThbRate;
+  const usdInRub = usdRubRate * bhtInUsd;
+  const result = usdInRub / bhtInput;
+  return result.toFixed(2);
+};
+
+const form = document.getElementById('conversionForm');
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const bhtInput = Number(formData.get('bhtInput'));
+  const usdThbRate = Number(formData.get('usdThbRate'));
+  const usdRubRate = Number(formData.get('usdRubRate'));
+  const usdKztRate = Number(formData.get('usdKztRate'));
+  const kztRubRate = Number(formData.get('kztRubRate'));
+  const result = state.isChecked
+    ? calculateRateKzt(bhtInput, usdThbRate, usdKztRate, kztRubRate)
+    : calculateRateRub(bhtInput, usdThbRate, usdRubRate);
+  const h2 = document.querySelector('#result');
+  h2.textContent = `Курс бата к рублю: ${result}`;
+});
+
+const feeCheckbox = document.getElementById('feeCheckbox');
+feeCheckbox.addEventListener('change', (e) => {
+  if (e.target.checked) {
+    state.isFee = true;
+  } else {
+    state.isFee = false;
+  }
+});
+
+const checkbox = document.getElementById('kztCheckbox');
+checkbox.addEventListener('change', (e) => {
+  if (e.target.checked) {
+    state.isChecked = true;
+    form.innerHTML = `
       <div class="form-group">
-            <label for="bhtInput">Требуемая сумма (в батах):</label>
+            <label for="bhtInput">Требуемая сумма (в THB):</label>
             <input type="number" step="0.01" class="form-control" id="bhtInput" name="bhtInput" required>
       </div>
       <div class="form-group">
@@ -64,11 +86,11 @@ const calculateRateKzt = (bhtInput, usdThbRate, usdKztRate, kztRubRate) => {
       <button type="submit" class="btn btn-primary mt-4 mb-4">Рассчитать</button>
       <h2 id="result"></h2>
       `;
-    } else {
-        state.isChecked = false;
-        form.innerHTML = `
+  } else {
+    state.isChecked = false;
+    form.innerHTML = `
       <div class="form-group">
-            <label for="bhtInput">Требуемая сумма (в батах):</label>
+            <label for="bhtInput">Требуемая сумма (в THB):</label>
             <input type="number" step="0.01" class="form-control" id="bhtInput" name="bhtInput" required>
       </div>
       <div class="form-group">
@@ -82,6 +104,5 @@ const calculateRateKzt = (bhtInput, usdThbRate, usdKztRate, kztRubRate) => {
       <button type="submit" class="btn btn-primary mt-4 mb-4">Рассчитать</button>
       <h2 id="result"></h2>
       `;
-    }
-  });
-  
+  }
+});
