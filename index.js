@@ -27,12 +27,11 @@ const calculateRateKzt = (bhtInput, usdThbRate, usdKztRate, kztRubRate) => {
     e.preventDefault();
     
     const formData = new FormData(e.target);
-    const bhtInput = formData.get('bhtInput');
-    const usdThbRate = formData.get('usdThbRate');
-    const usdRubRate = formData.get('usdRubRate');
-    const usdKztRate = formData.get('usdKztRate');
-    const kztRubRate = formData.get('kztRubRate');
-  
+    const bhtInput = Number(formData.get('bhtInput'));
+    const usdThbRate = Number(formData.get('usdThbRate'));
+    const usdRubRate = Number(formData.get('usdRubRate'));
+    const usdKztRate = Number(formData.get('usdKztRate'));
+    const kztRubRate = Number(formData.get('kztRubRate'));
     const result = state.isChecked
         ? calculateRateKzt(bhtInput, usdThbRate, usdKztRate, kztRubRate)
         : calculateRateRub(bhtInput, usdThbRate, usdRubRate);
