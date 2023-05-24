@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Калькулятор курса</title>
+    <title>Калькулятор кросс-курса БЦК</title>
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -21,36 +21,20 @@
   </head>
   <body>
     <div class="container mt-4">
-      <h1>Калькулятор курса третьей валюты</h1>
+      <h1>Калькулятор кросс-курса БЦК по картам VISA</h1>
       <div class="form-check form-switch">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          style="transform: scale(1.2)"
-          id="kztCheckbox"
-        />
+        <input class="form-check-input" type="checkbox" id="kztCheckbox" />
         <label class="form-check-label mb-3" for="kztCheckbox">
           Через KZT
         </label>
       </div>
-      <div class="form-check form-switch">
-        <input
-          class="form-check-input"
-          style="transform: scale(1.2)"
-          type="checkbox"
-          checked
-          id="feeCheckbox"
-        />
-        <label class="form-check-label mb-3" for="feeCheckbox">
-          + комиссия (220 ฿)
-        </label>
-      </div>
       <form id="conversionForm">
-        <div class="form-group">
-          <label for="curInput">Требуемая сумма (в третьей валюте):</label>
+        <div class="mb-3">
+          <label for="curInput">Сумма платежа (в третьей валюте):</label>
           <input
             type="number"
             step="0.01"
+            min="0.01"
             class="form-control"
             id="curInput"
             name="curInput"
@@ -58,73 +42,109 @@
             required
           />
         </div>
-        <div class="form-group">
-          <label for="usdCurRate"
-            >Курс USD к третьей валюте (<a
-              target="_blank"
-              href="https://www.visa.com.ua/ru_UA/support/consumer/travel-support/exchange-rate-calculator.html"
-              >Visa</a
-            >):</label
-          >
+        <div class="mb-3">
+          <label for="usdCurRate">Курс USD к третьей валюте:</label>
           <input
             type="number"
             step="0.01"
+            min="0.01"
             class="form-control"
             id="usdCurRate"
             name="usdCurRate"
             placeholder="0.00"
             required
+            aria-describedby="usdCurHelp"
           />
-        </div>
-        <div class="form-group usd-rub" style="display: block">
-          <label for="usdRubRate"
-            >Курс USD к RUB (<a target="_blank" href="https://t.me/KZrobot"
-              >БЦК</a
-            >):</label
+          <small id="usdCurHelp" class="form-text text-muted"
+            >Узнать курс можно на сайте
+            <a
+              target="_blank"
+              href="https://www.visa.com.ua/ru_UA/support/consumer/travel-support/exchange-rate-calculator.html"
+              >VISA</a
+            >
+            (в поле "комиссия банка" указать 1.5%)</small
           >
+        </div>
+        <div class="usd-rub mb-3" style="display: block">
+          <label for="usdRubRate">Курс USD к RUB:</label>
           <input
             type="number"
             step="0.01"
+            min="0.01"
             class="form-control"
             id="usdRubRate"
             name="usdRubRate"
             placeholder="0.00"
             required
+            aria-describedby="usdRubHelp"
           />
-        </div>
-        <div class="form-group usd-kzt" style="display: none">
-          <label for="usdKztRate"
-            >Курс USD к KZT (<a target="_blank" href="https://t.me/KZrobot"
-              >БЦК</a
-            >):</label
+          <small id="usdRubHelp" class="form-text text-muted"
+            >Узнать курс можно в телеграм-боте:
+            <a target="_blank" href="https://t.me/KZrobot"
+              >https://t.me/KZrobot</a
+            ></small
           >
+        </div>
+        <div class="usd-kzt mb-3" style="display: none">
+          <label for="usdKztRate">Курс USD к KZT:</label>
           <input
             type="number"
             step="0.01"
+            min="0.01"
             class="form-control"
             id="usdKztRate"
             name="usdKztRate"
             placeholder="0.00"
+            aria-describedby="usdKztHelp"
           />
-        </div>
-        <div class="form-group kzt-rub" style="display: none">
-          <label for="kztRubRate"
-            >Курс RUB к KZT (<a target="_blank" href="https://www.finsend.io"
-              >finsend</a
-            >):</label
+          <small id="usdKztHelp" class="form-text text-muted"
+            >Узнать курс можно в телеграм-боте:
+            <a target="_blank" href="https://t.me/KZrobot"
+              >https://t.me/KZrobot</a
+            ></small
           >
+        </div>
+        <div class="kzt-rub mb-3" style="display: none">
+          <label for="kztRubRate">Курс RUB к KZT:</label>
           <input
             type="number"
             step="0.01"
+            min="0.01"
             class="form-control"
             id="kztRubRate"
             name="kztRubRate"
             placeholder="0.00"
+            aria-describedby="kztRubHelp"
           />
+          <small id="usdRubHelp" class="form-text text-muted"
+            >Узнать курс можно в телеграм-боте:
+            <a target="_blank" href="https://t.me/KZrobot"
+              >https://t.me/KZrobot</a
+            ></small
+          >
         </div>
-        <button type="submit" class="btn btn-primary mt-4 mb-4">
-          Рассчитать
-        </button>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="feeCheckbox" />
+          <label class="form-check-label mb-3" for="feeCheckbox">
+            Доп. комиссия
+          </label>
+        </div>
+        <div class="input-group fee mb-3" style="display: none">
+          <input
+            type="number"
+            name="feeInput"
+            id="feeInput"
+            step="0.01"
+            min="0.01"
+            class="form-control"
+            placeholder="0.00"
+          />
+          <select class="input-group-text" id="select-addon">
+            <option selected value="sum">Фикс</option>
+            <option value="percent">%</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-4">Рассчитать</button>
         <h2 id="result"></h2>
         <h2 id="result-2"></h2>
       </form>
